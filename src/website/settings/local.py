@@ -33,6 +33,8 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_ANNOTATIONS = {
-    'tasks.add': {'rate_limit': '5/m'}
+    'historian.tasks.investigate.look_for_references': {'rate_limit': '10/m'},
+    'historian.tasks.investigate.investigate': {'rate_limit': '5/m'},
 }
 CELERY_TASK_ALWAYS_EAGER = False
+

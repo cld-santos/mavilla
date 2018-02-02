@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson.objectid import ObjectId 
 
 
 class Url():
@@ -23,9 +24,11 @@ class Database():
         return url
 
     def update_url(self, url):
+        if not isinstance(url._id, ObjectId):
+            url._id = ObjectId(url._id)
         try:
             self.db.update_one(
-                { '_id': url._id },
+                { '_id':  url._id},
                 { '$set': url.__dict__ }
             )
             return True
@@ -34,7 +37,10 @@ class Database():
             return False
 
     def get_unprocessed_urls(self):
-        res = [Url(**item) for item in self.db.find({'processed': False})]
+        res = [item for item in self.db.find({'processed': False})]
+        for idx in range(len(res)):
+            res[idx]['_id'] = str(res[idx]['_id'])
+
         return res
 
     def get_processed_urls(self):
