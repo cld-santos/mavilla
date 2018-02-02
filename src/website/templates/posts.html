@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% for post in posts %}
+		<div class="post">
+			<div class="post-title"> 
+				<a href="/{{ root_url }}/{{ post.name }}">{{ post.title }}</a> </br>
+				<span class="post-under-title">{{ post.last_update|date:"F j, Y, g:i a" }}</span>
+			</div>
+			<div class="separator-realy-small"></div>
+			<div> {{ post.summary }}  </div>
+		</div>
+		<div class="separator-small"></div>
+		<hr align="center">
+		<div class="separator-regular"></div>
+	{% endfor %}
+{% endblock %}
