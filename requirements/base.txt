@@ -1,0 +1,4 @@
+celery
+selenium
+pymongo
+Django
