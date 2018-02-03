@@ -1,1 +1,1 @@
-from .investigate import look_for_references
+from .investigate import look_for_references, investigate

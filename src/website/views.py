@@ -1,7 +1,7 @@
 from django.http import HttpResponse
-from django.template import loader, Context
+# from django.template import loader, Context
 from django.views import View
-from historian.investigation import Investigation
+from historian.tasks.investigate import investigate
 
 
 class Index(View):
@@ -9,7 +9,8 @@ class Index(View):
         # template = loader.get_template('base.html')
         # rendered_template = template.render(Context())
 
-        investigation = Investigation('http://claudio-santos.com/')
-        investigation.investigate_unprocessed_url(investigation.unprocessed_urls())
+        # investigation = Investigation('http://claudio-santos.com/')
+        # investigation.investigate_unprocessed_url(investigation.unprocessed_urls())
+        investigate.delay('http://claudio-santos.com/')
 
-        return HttpResponse('')
+        return HttpResponse('Processando...')
