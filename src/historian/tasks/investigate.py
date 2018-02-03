@@ -1,11 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 import re
-from celery import group
+from celery import group, chain
 from website.celery import app
-from ..tools.html import HtmlFinder, get_html_from
+from ..tools.scraper import HtmlFinder, get_html_from
 from ..tools.investigation import Investigation
 from ..tools.database import Url
-from bson.objectid import ObjectId
 
 
 http_pattern = r'^http[s]?://'
@@ -24,17 +23,19 @@ def to_one_dimension(matrix):
 
 @app.task(bind=True)
 def look_for_references(self, url):
-    investigation = Investigation()
+    urls = []
+
     if not isinstance(url, Url):
         url = Url(**url)
 
-    urls = []
+    investigation = Investigation()
     document = get_html_from(url.url)
     finder = HtmlFinder(document)
 
     # Finding references (aka links)
     references = finder.find_references()
     for reference in references:
+
         attributes = reference.get('attributes')
         href = attributes.get('href', None)
         if not href or href == url.url:
@@ -49,7 +50,7 @@ def look_for_references(self, url):
         urls.append(href)
 
     investigation.mark_as_processed(url)
-    investigation.register_unprocessed_urls(urls, url.url)
+    return investigation.register_unprocessed_urls(urls, url.url)
 
 
 @app.task(bind=True)
@@ -57,16 +58,16 @@ def investigate(self, urls, investigation=None):
     db = Investigation()
 
     if isinstance(urls, list):
-        _list_aux = [look_for_references.s(_url) for _url in urls]
-        _list_aux.append(investigate.s(db.unprocessed_urls()))
-        group_execution = group(_list_aux)
-        group_execution()
-        
+        _list_aux = [chain(look_for_references.s(_url), investigate.s()) for _url in urls if _url and _url['url']]
+        group_of_execution = group(_list_aux)
+        group_of_execution()
     else:
-        saved_url = db.save_url(urls)
-        _url = saved_url.__dict__
-        _url['_id'] = str(_url['_id'])
-        group_execution = group(look_for_references.s(_url), investigate.s(db.unprocessed_urls()))
-        group_execution()
+        try:
+            _url = db.save_url(urls)
+            group_execution = chain(look_for_references.s(_url.to_dict()), investigate.s())
+            group_execution()
+        except Exception as e:
+            print(e)
+            print('This URL "{0}" has already been registred.'.format(urls))
 
     

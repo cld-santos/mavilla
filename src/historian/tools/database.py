@@ -9,12 +9,18 @@ class Url():
         self.parent = kwargs.get('parent', None)
         self._id = kwargs.get('_id', None)
 
+    def to_dict(self):
+        _url = self.__dict__
+        _url['_id'] = str(_url['_id'])
+        return _url
+
 
 class Database():
     def __init__(self, db_name='ibm'):
         self._client = MongoClient('mongodb://localhost:27017/')
         self._database = self._client[db_name]
         self.db = self._database.investigation
+        self.db.create_index('url', unique=True)
 
     def save_url(self, url):
         _url_dict = url.__dict__
@@ -37,9 +43,10 @@ class Database():
             return False
 
     def get_unprocessed_urls(self):
-        res = [item for item in self.db.find({'processed': False})]
-        for idx in range(len(res)):
-            res[idx]['_id'] = str(res[idx]['_id'])
+        res = []
+        for item in self.db.find({'processed': False}):
+            item['_id'] = str(item['_id'])
+            res.append(item)
 
         return res
 

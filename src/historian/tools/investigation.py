@@ -2,10 +2,11 @@ from .database import Database, Url
 
 
 class Investigation():
-    def __init__(self):
-        self.db = Database()
+    def __init__(self, database=None):
+        self.db = database if database else Database()
 
     def register_unprocessed_urls(self, urls, parent=None):
+        res = []
         if not urls or not isinstance(urls, list):
             return
 
@@ -14,11 +15,16 @@ class Investigation():
             if url in existent_urls:
                 continue
 
-            self.db.save_url(Url(**{'url': url, 'parent': parent}))
-            existent_urls.append(url)
+            try:
+                _url = self.save_url(url, parent=parent)
+                res.append(_url.to_dict())
+                existent_urls.append(url)
+            except:
+                pass
+        return res
 
-    def save_url(self, url_address):
-        return self.db.save_url(Url(**{'url': url_address}))
+    def save_url(self, url_address, parent=None):
+        return self.db.save_url(Url(**{'url': url_address, 'parent': parent}))
 
     def mark_as_processed(self, url):
         url.processed = True
