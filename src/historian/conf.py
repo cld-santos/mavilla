@@ -1,5 +1,7 @@
-broker_url = 'amqp://guest@localhost//'
-result_backend = 'amqp://guest@localhost//'
+import os
+
+broker_url = 'amqp://guest@{0}//'.format(os.environ['BROKER_MACHINE'])
+result_backend = 'amqp://guest@{0}//'.format(os.environ['BROKER_MACHINE'])
 
 task_serializer = 'json'
 result_serializer = 'json'

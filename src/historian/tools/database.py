@@ -1,3 +1,4 @@
+import os
 import json
 from pymongo import MongoClient
 from bson.objectid import ObjectId 
@@ -23,7 +24,7 @@ class Url():
 
 class Database():
     def __init__(self, db_name='ibm', collection=None):
-        self._client = MongoClient('mongodb://localhost:27017/')
+        self._client = MongoClient('mongodb://{0}:27017/'.format(os.environ['MONGO_MACHINE']))
         self._database = self._client[db_name]
         self.db = self._database[collection if collection else 'investigation']
         self.db.create_index('url', unique=True)

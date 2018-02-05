@@ -1,4 +1,5 @@
 from __future__ import absolute_import, unicode_literals
+import os
 import re
 from celery import chain
 from socketIO_client import SocketIO
@@ -60,7 +61,7 @@ def look_for_references(self, url, collection=None):
 
 @app.task(bind=True)
 def investigate_it(self, urls, parent=None, collection=None):
-    socketIO = SocketIO('localhost', 5000)
+    socketIO = SocketIO(os.environ['WEBSERVER_MACHINE'], 5000)
     investigation = Investigation(collection=collection)
 
     for url in urls:
