@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-pod
+  labels:
+    app: webserver
+spec:
+  containers:
+    - name: mavilla
+      image: simplologia/mavilla:latest
+      env:
+      - name: BROKER_HOST
+        value: 'rabbitmq-pod-svc'
+      - name: WEBSERVER_HOST
+        value: 'webserver-pod-svc'
+      - name: WEBSERVER_PORT
+        value: '5000'
+      - name: MONGO_HOST
+        value: 'mongo-pod-svc'
+      - name: MONGO_PORT
+        value: '27017'
