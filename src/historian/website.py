@@ -1,3 +1,4 @@
+import os
 import uuid
 from celery import Celery
 from flask import (
@@ -32,8 +33,8 @@ def make_celery(app):
 
 flask_app = Flask(__name__)
 flask_app.config.update(
-    CELERY_BROKER_URL='amqp://guest@localhost//',
-    CELERY_RESULT_BACKEND='amqp://guest@localhost//'
+    CELERY_BROKER_URL='amqp://guest@{0}//'.format(os.environ['BROKER_MACHINE']),
+    CELERY_RESULT_BACKEND='amqp://guest@{0}//'.format(os.environ['BROKER_MACHINE'])
 )
 
 celery = make_celery(flask_app)
