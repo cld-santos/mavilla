@@ -2,8 +2,9 @@ from .database import Database, Url
 
 
 class Investigation():
-    def __init__(self, database=None):
-        self.db = database if database else Database()
+    def __init__(self, database=None, collection=None):
+        self.collection = collection
+        self.db = database if database else Database(collection=collection)
 
     def register_unprocessed_urls(self, urls, parent=None):
         res = []
@@ -26,6 +27,9 @@ class Investigation():
     def save_url(self, url_address, parent=None):
         return self.db.save_url(Url(**{'url': url_address, 'parent': parent}))
 
+    def update_url(self, url, **kwargs):
+        self.db.update_url(url, **kwargs)
+
     def mark_as_processed(self, url):
         url.processed = True
         self.db.update_url(url)
@@ -38,3 +42,6 @@ class Investigation():
 
     def all_urls(self):
         return self.db.get_all_urls()
+
+    def kill_them_all(self):
+        self.db.kill_them_all(self.collection)

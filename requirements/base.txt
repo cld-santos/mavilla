@@ -1,4 +1,8 @@
 celery
 selenium
 pymongo
-Django
+dnspython
+Flask
+eventlet
+flask-socketio
+socketIO-client

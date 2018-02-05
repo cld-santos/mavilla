@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MAVILLA is investigating</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/investigation.css">
+	<script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/socket.io.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {	
+		    var message = io.connect(location.protocol + '//' + document.domain + ':' + location.port, { transports: ['websocket'] });
+		    message.on('connect', function() {
+			    message.on('vaiMensagem', function(msg) {
+			    	url = msg.data;
+			        $('.urls').append('<p>' + url.url + '</p>');
+			    });
+		    });
+	    });
+	</script>	
+</head>
+<body>
+	<div class="head">
+		<br>
+		<h1> MAVILLA - The Historian </h1>
+	</div>
+	<div class="content">
+		MAVILLA has already begun to investigate, remember the process Key: {{process_key}}, <a href="/investigation/{{process_key}}/cancel">click here to cancel this investigation.</a> 
+	</div>
+	<div class="urls"></div>
+</body>
+</html>

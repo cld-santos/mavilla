@@ -1,0 +1,40 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	overflow:hidden;
+}
+
+.head {
+	background-color: black;
+	color: white;
+	height: 15%;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+.head h1{
+    align-content: center;
+    text-align: center;
+}
+
+.content {
+	width: 100%;
+	height: 85%;
+	width: 100%;
+	margin-left: 27%;
+}
+
+.content .url_title {
+	margin: 15px;
+}
+
+.content .url_submit {
+	margin-left: 20%;
+	width: 150px;
+}
+
+.content .url_text {
+	margin: 15px;
+	width: 40%;
+}
