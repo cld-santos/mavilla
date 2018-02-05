@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rabbitmq-pod
+  labels:
+    app: rabbitmq
+spec:
+  containers:
+    - name: rabbitmq
+      image: rabbitmq:3
+        

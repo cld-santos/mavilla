@@ -60,6 +60,8 @@ def investigation(process_key):
 
 @flask_app.route('/investigation/<process_key>/cancel', methods=['POST', 'GET'])
 def cancel_investigation(process_key):
+    if not process_key:
+        return
     investigation = Investigation(collection=process_key)
     investigation.kill_them_all()
     return redirect(url_for('index'))
