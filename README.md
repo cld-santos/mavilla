@@ -10,10 +10,10 @@ First of all, you need to do a request through mavilla form, telling us which UR
 Each time we get an URL, we send back to the website a WebSocket request to tell you (dear user) what we have been doing.
 
 This 'simple' website use a few complex concepts like:
-	Websocket;
-	Asyncronous process;
-	Data Scrape;
-	Chains of async tasks;
-	Containers;
+ - Websocket;
+ - Asyncronous process;
+ - Data Scrape;
+ - Chains of async tasks;
+ - Containers;
 
 It's a great source of learning, so take a sit, get comfortable and enjoy.
