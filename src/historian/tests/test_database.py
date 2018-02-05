@@ -26,7 +26,14 @@ class TestDatabase(TestCase):
         _url.processed = True
         res = self.db.update_url(_url)
         self.assertEqual(res, True)
-        self.assertEqual(_url.processed, True)
+
+    def test_update_url_with_kwargs(self):
+        _url = self.db.save_url(Url(**{'url': 'http://claudio-santos.com'}))
+        res = self.db.update_url(_url, processed=True)
+        url_result = self.db.get_url_by(_url._id)
+        self.assertEqual(url_result['processed'], True)
+        self.assertEqual(res, True)
+
 
     def test_get_all_unprocessed(self):
         self.db.save_url(Url(**{'url': 'http://csantos.com'}))
