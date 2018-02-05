@@ -6,3 +6,4 @@ Flask
 eventlet
 flask-socketio
 socketIO-client
+gunicorn
