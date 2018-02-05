@@ -17,3 +17,31 @@ This 'simple' website use a few complex concepts like:
  - Containers;
 
 It's a great source of learning, so take a sit, get comfortable and enjoy.
+
+## How to replicate the solution at your machine
+
+1- Create the broker with RabbitMQ, and a MongoDB container to get some flexibility on Database Structure. Remember to change the <full_path_folder> to your file system path.
+
+``` bash
+	docker run -d --hostname rabbitmq -p 5672:5672 --name ibm-rabbitmq rabbitmq:3
+	docker run --name ibm-mongo -p 27017:27017 -v <full_path_folder>/data:/data/db -d mongo
+```
+
+2- Get those machines IP addresses, which we just created.
+
+```
+	docker inspect ibm-mongo | grep IPAddress
+	docker inspect ibm-rabbitmq | grep IPAddress
+```
+
+3- Then create the mahilla container which has the celery and the webserver
+
+```
+	docker run -d --hostname mavilla -p 5000:5000 -e "BROKER_HOST=<BROKER_DB_IP>" -e "WEBSERVER_HOST=localhost" -e "MONGO_HOST=<MONGO_DB_IP>" -e "WEBSERVER_PORT=5000" -e "MONGO_PORT=27017" --link ibm-mongo --link ibm-rabbitmq --name mavilla simplologia/mavilla:latest
+```
+
+4- Go to your web browser and access the [http://localhost:5000/](http://localhost:5000/), type the website which you want to investigate as follows http://claudio-santos.com/.
+
+
+
+
